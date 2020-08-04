@@ -1,12 +1,9 @@
 machine:
   node:
-    version: 8.2.0
-  pre:
-    - mkdir ~/.cache/yarn
+    version: "v4"
 dependencies:
   pre:
-    - npm install -g bower yarn ember-cli
-  cache_directories:
-    - ~/.cache/yarn
+    - npm install -g bower
   override:
-    - yarn
+    - npm i
+    - bower i

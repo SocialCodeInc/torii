@@ -10,7 +10,7 @@ const { module, test } = QUnit;
 var opened, mockPopup, providerConfig;
 
 module('Google Bearer- Integration', {
-  beforeEach() {
+  setup: function(){
     mockPopup = {
       open: function(){
         opened = true;
@@ -29,7 +29,7 @@ module('Google Bearer- Integration', {
       }
     });
   },
-  afterEach() {
+  teardown: function(){
     opened = false;
     Ember.run(app, 'destroy');
   }

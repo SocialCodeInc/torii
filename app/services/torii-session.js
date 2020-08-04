@@ -1,1 +1,1 @@
-export { default } from 'torii/services/torii-session';
+export { default } from 'torii/services/session';

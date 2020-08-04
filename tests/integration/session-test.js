@@ -12,7 +12,7 @@ import QUnit from 'qunit';
 const { module, test } = QUnit;
 
 module('Session (open) - Integration', {
-  beforeEach() {
+  setup: function(){
     app = startApp({loadInitializers: true});
     app.register('service:session', SessionService);
     app.register('torii-provider:dummy-success', DummySuccessProvider);
@@ -20,7 +20,7 @@ module('Session (open) - Integration', {
     app.inject('service:session', 'torii', 'service:torii');
     session = lookup(app, 'service:session');
   },
-  afterEach() {
+  teardown: function(){
     Ember.run(app, 'destroy');
   }
 });
@@ -72,7 +72,7 @@ test("failed auth sets isAuthenticated to false, sets error", function(assert){
 });
 
 module('Session (close) - Integration', {
-  beforeEach() {
+  setup: function(){
     app = startApp({loadInitializers: true});
     app.register('service:session', SessionService);
     app.inject('service:session', 'torii', 'service:torii');
@@ -84,7 +84,7 @@ module('Session (close) - Integration', {
     session.get('stateMachine').transitionTo('opening');
     session.get('stateMachine').send('finishOpen', { currentUser: user});
   },
-  afterEach() {
+  teardown: function(){
     Ember.run(app, 'destroy');
   }
 });

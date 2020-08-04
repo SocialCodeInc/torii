@@ -1,16 +1,8 @@
-import config from '../../config/environment';
-
-const {
-  torii: { sessionServiceName }
-} = config;
-
-export function stubValidSession(application, sessionData) {
-  let session = application.__container__.lookup(`service:${sessionServiceName}`);
-
-  let sm = session.get('stateMachine');
-  Ember.run(() => {
+export function stubValidSession(application,sessionData) {
+  var session = application.__container__.lookup('service:session');
+  var sm = session.get('stateMachine');
+  Ember.run(function() {
     sm.send('startOpen');
     sm.send('finishOpen', sessionData);
   });
 }
-

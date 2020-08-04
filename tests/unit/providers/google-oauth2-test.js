@@ -8,7 +8,7 @@ var provider;
 let originalConfiguration;
 
 module('Unit - GoogleAuth2Provider', {
-  beforeEach() {
+  setup: function(){
     originalConfiguration = getConfiguration();
     configure({
       providers: {
@@ -17,7 +17,7 @@ module('Unit - GoogleAuth2Provider', {
     });
     provider = GoogleProvider.create();
   },
-  afterEach() {
+  teardown: function(){
     Ember.run(provider, 'destroy');
     configure(originalConfiguration);
   }
