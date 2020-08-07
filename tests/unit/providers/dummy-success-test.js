@@ -6,10 +6,10 @@ import QUnit from 'qunit';
 let { module, test } = QUnit;
 
 module('DummySuccessProvider - Unit', {
-  beforeEach() {
+  setup: function(){
     provider = Provider.create();
   },
-  afterEach() {
+  teardown: function(){
     Ember.run(provider, 'destroy');
   }
 });

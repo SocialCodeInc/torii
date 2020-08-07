@@ -9,7 +9,7 @@ let { module, test } = QUnit;
 let originalConfiguration;
 
 module('Unit - EdmodoConnectProvider', {
-  beforeEach() {
+  setup: function(){
     originalConfiguration = getConfiguration();
     configure({
       providers: {
@@ -18,7 +18,7 @@ module('Unit - EdmodoConnectProvider', {
     });
     provider = EdmodoConnectProvider.create();
   },
-  afterEach() {
+  teardown: function(){
     Ember.run(provider, 'destroy');
     configure(originalConfiguration);
   }

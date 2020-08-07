@@ -1,5 +1,25 @@
 [![Torii Build Status](https://circleci.com/gh/Vestorly/torii.png?circle-token=9bdd2f37dbcb0be85f82a6b1ac61b9333b68625b "Torii Build Status")](https://circleci.com/gh/Vestorly/torii) [![Ember Observer Score](http://emberobserver.com/badges/torii.svg)](http://emberobserver.com/addons/torii)
 
+# SocialCode Torii override to not use localStorage and fix bugs (on Torii v 0.8.4)
+
+This was done to support Safari private browser pre-v11. Changes also include other bug fixes, which may have been fixed in Torii upstream after v0.8.4.
+
+1. Environment config for Torii now requires an additional key: `allowedRedirectPaths`
+
+```JavaScript
+      torii: {
+        providers: {
+          //torii provider config. See Torii docs
+        },
+        allowedRedirectPaths: [
+          //string list of redirect paths your app will use for torii authentication
+        ]
+      }
+```
+
+2. Use `torii/mixins/application-route-mixin` in your application route for authentication redirect handling. (If using HAK, this is already mixed into HAK's application route mixin).
+
+
 # Compatibility Matrix
 
 |  Torii    | Ember   | Ember-Data         |
@@ -79,7 +99,7 @@ module.exports = function(environment) {
       providers: {
         'facebook-oauth2': {
           apiKey:      'facebook-app-id',
-          redirectUri: '/my-custom-landing-uri' // default is /torii/redirect.html
+          redirectUri: '/my-custom-landing-uri' // default is the current URL
         }
       }
     }
@@ -379,37 +399,6 @@ Then in `templates/application.hbs` you might have:
 {{/if}}
 ```
 
-## OAuth Redirects
-
-Torii was originally configured to add an initializer that detects when your
-Ember app has been redirected-to by an OAuth provider, but this has been shown
-to be a potential vulnerability, and best practice is to use the static 
-`/torii/redirect.html` page that the Torii addon makes available as of version
-0.9.0.
-
-Therefore, **the redirect URL you register with the OAuth provider(s) that you
-use should be: `<your app base URL>/torii/redirect.html`**. This is a static
-HTML page that loads no external assets and is configured to interact correctly
-with Torii's `provider#open` promise in your app.
-
-Torii versions after v0.8.4 will log an error message if you do not use the
-Torii-provided redirect HTML page. Using your app as the redirect target is
-deprecated and the functionality will be removed in later versions of Torii.
-
-If you understand the security risks and need to continue using your app as the
-redirect target, you can disable the error message by setting
-`allowUnsafeRedirects: true` in the `torii` section of your
-`config/environment.js`. For more details see [this blog
-post](https://medium.com/@bantic/torii-vulnerability-disclosure-dd98b6d88ec3).
-
-By default Torii sets the `redirectUri` to
-`<currentURL>/torii/redirect.html`. If you wish to use the deprecated behavior
-then you will also have to manually configure the `redirectUri` to be `/`.
-
-If you are no longer relying on the deprecated behavior and wish for it to no
-longer be executed you can manually disable it by setting
-`disableRedirectInitializer` to `true` in your `config/environment.js`.
-
 ## Providers in Torii
 
 Torii is built with several providers for common cases. If you intend to
@@ -438,7 +427,7 @@ export default Ember.Object.extend({
   // Create a new authorization.
   // When your code calls `this.get('torii').open('geocities', options)`,
   // the `options` will be passed to this provider's `open` method.
-  
+
   open: function(options) {
     return new Ember.RSVP.Promise(function(resolve, reject){
       // resolve with an authorization object
@@ -491,7 +480,7 @@ export default Ember.Route.extend({
         username: username,
         password: password
       };
-      
+
       this.get('torii').open(providerName, options).then(function(authorization){
         // authorization as returned by the provider
         route.somethingWithGeocitiesToken(authorization.sessionToken);
@@ -669,16 +658,21 @@ There are a number of ember-cli addons that allow you to use Torii with other pr
 ## Running the tests locally
 
   * Clone the repo `git clone git@github.com:Vestorly/torii.git`, `cd torii/`
-  * `yarn install`
+  * `npm install`
+  * `bower install`
   * `npm test` for tests.
   * Or, to run tests in the browser:
     * Start the server: `ember test --server`
 
 ## Running the torii examples locally
 
-The torii example OAuth apps (at Facebook, Google, LinkedIn, etc.) are all
+  * Clone the repo `git clone git@github.com:Vestorly/torii.git`, `cd torii/`
+  * `npm install`
+  * `bower install`
+
+The torii example apps (at Facebook, Google, LinkedIn, etc.) are all
 configured to use
-`http://torii-example.com:4200/torii/redirect.html` as their redirect
+`http://torii-example.com:8000/example/basic.html` as their redirect
 uri, so you will need to make an alias in your hosts file that points
 **torii-example.com** to localhost, and you must view the examples from
 that same host.
@@ -692,20 +686,10 @@ The `/etc/hosts` equivalent filepath on Windows is:
 
 For more info, see [Hosts at wikipedia](http://en.wikipedia.org/wiki/Hosts_(file)).
 
-  * Clone the repo `git clone git@github.com:Vestorly/torii.git`, `cd torii/`
-  * `yarn install`
-  * `ember serve`
-
 Now, start your server and visit the page:
 
   * `ember serve`
-  * open `http://torii-example.com:4200`
-
-## Security
-
-If you discover a vulnerability in Torii please inform us by emailing
-security@201-created.com. You can encrypt the message using our [public
-key](https://keybase.io/bantic/pgp_keys.asc).
+  * open `http://torii-example.com:8000/example/basic.html`
 
 ## Release a new version
 

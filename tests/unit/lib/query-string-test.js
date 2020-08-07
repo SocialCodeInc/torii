@@ -12,7 +12,7 @@ var obj,
     optionalProperty = 'i-am-optional';
 
 module('QueryString - Unit', {
-  beforeEach() {
+  setup: function(){
     obj = Ember.Object.create({
       clientId:         clientId,
       responseType:     responseType,
@@ -22,7 +22,7 @@ module('QueryString - Unit', {
       falseProp: false
     });
   },
-  afterEach() {
+  teardown: function(){
     Ember.run(obj, 'destroy');
   }
 });

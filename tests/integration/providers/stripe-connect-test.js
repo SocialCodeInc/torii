@@ -13,7 +13,7 @@ var mockPopup = new MockPopup();
 var failPopup = new MockPopup({ state: 'invalid-state' });
 
 module('Stripe Connect - Integration', {
-  beforeEach() {
+  setup: function(){
     app = startApp({loadInitializers: true});
     app.register('torii-service:mock-popup', mockPopup, {instantiate: false});
     app.register('torii-service:fail-popup', failPopup, {instantiate: false});
@@ -26,7 +26,7 @@ module('Stripe Connect - Integration', {
       }
     });
   },
-  afterEach() {
+  teardown: function(){
     mockPopup.opened = false;
     Ember.run(app, 'destroy');
   }

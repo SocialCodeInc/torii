@@ -1,4 +1,4 @@
-/* eslint-env node */
+/* jshint node: true */
 'use strict';
 
 module.exports = {
@@ -6,7 +6,7 @@ module.exports = {
   included: function(app) {
     var hostApp = this._findApp(app);
     var toriiConfig = hostApp.project.config(app.env)['torii'];
-    if (!toriiConfig && hostApp === app) {
+    if (!toriiConfig) {
       console.warn('Torii is installed but not configured in config/environment.js!');
     }
 
